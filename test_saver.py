@@ -4,6 +4,9 @@ import asyncio
 from pathlib import Path
 from types import SimpleNamespace as NS
 import unittest
+import subprocess
+import sys
+import tempfile
 
 
 class FilterTests(unittest.IsolatedAsyncioTestCase):
@@ -42,6 +45,21 @@ class FilterTests(unittest.IsolatedAsyncioTestCase):
         await self.env['enqueue'](self.msg())
         await self.env['enqueue'](self.msg(sender_id=3, chat_id=3))
         self.assertEqual(self.env['queue'].qsize(), 2)
+
+
+class ErrorPrivacyTests(unittest.TestCase):
+    def test_invalid_local_config_does_not_print_private_details(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            Path(tmp, 'config.json').write_text('synthetic-private-marker-invalid-json')
+            result = subprocess.run(
+                [sys.executable, str(Path(__file__).with_name('saver.py')),
+                 '--state-dir', tmp], capture_output=True, text=True)
+            output = result.stdout + result.stderr
+            self.assertEqual(result.returncode, 1)
+            self.assertIn('JSONDecodeError', output)
+            self.assertNotIn('synthetic-private-marker', output)
+            self.assertNotIn(tmp, output)
+            self.assertNotIn('Traceback', output)
 
 
 if __name__ == '__main__':

@@ -188,3 +188,7 @@ if __name__ == '__main__':
         asyncio.run(main())
     except KeyboardInterrupt:
         print('\nStopped. Login remains local; revoke it in Telegram Settings > Devices if desired.')
+    except Exception as exc:
+        # Avoid exposing account data or credential-bearing exception bodies.
+        print(f'Stopped ({type(exc).__name__}). Check login, network, and folder permissions; private details suppressed.')
+        raise SystemExit(1)
