@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+.env*
+*.session*
+config.json
+recovery.json
+*.log
+*.partial
+.DS_Store
+downloads/
+media/
