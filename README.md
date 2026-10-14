@@ -2,52 +2,99 @@
 
 by mrdv71
 
-Save incoming self-destructing **photos, videos, and audio/voice messages from Telegram** onto your own computer or server. Uses Telethon and your own Telegram account, not a bot. Only media Telegram exposes with a TTL marker in regular private cloud chats is eligible; support depends on Telegram's API and the media still being available.
+Save available incoming disappearing photos, videos, and audio from Telegram private cloud chats to your own computer or server. Uses your personal Telegram account, not a bot.
 
-## Run locally or on a server
+## Choose one setup
 
-Choose your own **Mac/Linux/Windows computer** or an **always-on Linux server**.
-See [deployment options](DEPLOYMENT.md) for persistent storage, interactive login,
-and an optional systemd service with boot startup and automatic restart.
-The local commands below still work without installing a service.
+- **Your Mac, Linux computer, or Windows PC:** follow the steps below. Keep it awake and the terminal open.
+- **An always-on Linux server:** follow the [server guide](DEPLOYMENT.md). It includes automatic startup and restart.
 
-## Setup (macOS / Linux)
+GitHub stores the code; it does not run the program. Each user provides their own Telegram account and credentials. Installing this repository does not migrate or change another installation.
 
-Install Python 3.10+ and Git, then:
+## 1. Get your Telegram credentials
+
+1. Sign in at [my.telegram.org/apps](https://my.telegram.org/apps) and create an application to get your **API ID** and **API hash**.
+2. Have your phone number (including country code), Telegram login code, and two-step verification password (if enabled) ready.
+
+Enter these values only when the local setup command asks. Hidden inputs show no characters while you type; this is normal. Never put credentials in GitHub issues or commits.
+
+## 2. Install Python and Git
+
+Use **Python 3.10 or newer** (3.12 recommended) and Git.
+
+- **Mac:** install Python from [python.org](https://www.python.org/downloads/macos/). Run `git --version`; if macOS offers Command Line Tools, install them before continuing.
+- **Ubuntu 24.04 / Debian 12 or newer:** run `sudo apt update`, then `sudo apt install -y python3 python3-venv git`.
+- **Windows:** install Python from [python.org](https://www.python.org/downloads/windows/) with the Python launcher, and Git from [git-scm.com](https://git-scm.com/downloads/win). Reopen PowerShell afterward.
+
+Check `python3 --version` and `git --version` on Mac/Linux, or `py -3 --version` and `git --version` on Windows. Stop and fix missing tools or a Python version below 3.10 before continuing.
+
+## 3. Download and install
+
+Run the commands **one line at a time**. Continue only if the previous command succeeds. Choose the block for your operating system. These commands are for a new installation; if you already cloned this repository, enter that folder instead of cloning it again.
+
+### Mac / Linux — Terminal
 
 ```sh
 git clone https://github.com/mrdv71/telegram-disappearing-media-saver.git
 cd telegram-disappearing-media-saver
 python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install -r requirements.txt
-python saver.py --login
-python saver.py
+.venv/bin/python -m pip install -r requirements.txt
 ```
 
-Get your own API ID and API hash at https://my.telegram.org/apps. The login command prompts locally for those values, your phone number, Telegram login code, and optional two-step verification password. Do not paste credentials into GitHub or a chat.
-
-Default destination: `~/Downloads/TelegramDisappearingMedia`.
-
-```sh
-# Choose your destination
-python saver.py --output "$HOME/Downloads/MyTelegramMedia"
-# See options
-python saver.py --help
-```
-
-## Windows (PowerShell)
+### Windows — PowerShell
 
 ```powershell
 git clone https://github.com/mrdv71/telegram-disappearing-media-saver.git
 cd telegram-disappearing-media-saver
 py -3 -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
+```
+
+No virtual-environment activation is needed. Keep using the Python path shown below.
+
+## 4. Sign in once
+
+**Mac / Linux:**
+
+```sh
+.venv/bin/python saver.py --login
+```
+
+**Windows:**
+
+```powershell
 .\.venv\Scripts\python.exe saver.py --login
+```
+
+Follow the prompts. Success prints `Login saved locally`. Do not repeat setup on every start.
+
+## 5. Start and check
+
+**Mac / Linux:**
+
+```sh
+.venv/bin/python saver.py
+```
+
+**Windows:**
+
+```powershell
 .\.venv\Scripts\python.exe saver.py
 ```
 
-Windows instructions are provided but have not been tested on Windows. Restrict access to the state folder using your operating system's account/file permissions.
+Wait for `Ready: saving new disappearing media`. From a second account, send supported disappearing media to the signed-in account in a regular private cloud chat. Look for `Saved:` and open the file in `Downloads/TelegramDisappearingMedia` under your home folder. Ordinary photos without a disappearing/TTL marker are intentionally ignored. Telegram may not expose view-once media for download.
+
+Press **Ctrl+C** to stop. To start again, open a terminal in this repository folder and repeat **step 5 only**. Closing the terminal, sleeping, or shutting down the computer interrupts collection. On Mac, you can use `caffeinate -i .venv/bin/python saver.py` to prevent idle sleep while running; this does not guarantee operation with the lid closed.
+
+## If something fails
+
+- **File not found / cannot open script:** enter the cloned repository folder first.
+- **Missing module:** repeat the install command in step 3 using the same `.venv` Python.
+- **Login/setup missing:** complete step 4, then start again with the same data directory.
+- **Database locked:** stop other copies using the same session; run only one process per data directory.
+- **No saved media or alerts:** repeat the exact test in step 5, check the network, and read the limits below.
+
+Windows instructions are provided but Windows operation has not been verified. On Windows, restrict the private data folder to your own user account using folder permissions.
 
 ## Behavior and limits
 
