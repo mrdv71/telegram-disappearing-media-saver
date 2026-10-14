@@ -2,7 +2,14 @@
 
 by mrdv71
 
-Save incoming self-destructing **photos, videos, and audio/voice messages from Telegram** onto your own Mac or laptop. Uses Telethon and your own Telegram account, not a bot. Only media Telegram exposes with a TTL marker in regular private cloud chats is eligible; support depends on Telegram's API and the media still being available.
+Save incoming self-destructing **photos, videos, and audio/voice messages from Telegram** onto your own computer or server. Uses Telethon and your own Telegram account, not a bot. Only media Telegram exposes with a TTL marker in regular private cloud chats is eligible; support depends on Telegram's API and the media still being available.
+
+## Run locally or on a server
+
+Choose your own **Mac/Linux/Windows computer** or an **always-on Linux server**.
+See [deployment options](DEPLOYMENT.md) for persistent storage, interactive login,
+and an optional systemd service with boot startup and automatic restart.
+The local commands below still work without installing a service.
 
 ## Setup (macOS / Linux)
 
@@ -49,7 +56,7 @@ Windows instructions are provided but have not been tested on Windows. Restrict 
 - On first run, checks the previous 24 hours; later runs recover from the last successful checkpoint with a short overlap. Runs another check every minute.
 - Deduplicates successful downloads using account/chat/message identifiers stored only on your computer.
 - Secret Chats are not supported. This cannot recover media already expired, deleted, or no longer downloadable. View-once behavior is not guaranteed.
-- The computer must stay awake, online, and running the command. Ctrl-C stops the program; closing Terminal stops it. No system service is installed.
+- The computer must stay awake, online, and running the command. Ctrl-C stops the program; closing Terminal stops it. The basic command installs no service; optional server service instructions are in DEPLOYMENT.md.
 - Use only with media you have permission to retain. Disappearing messages do not imply permission to keep them.
 
 ## Private local state

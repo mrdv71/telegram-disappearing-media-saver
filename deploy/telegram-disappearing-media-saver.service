@@ -1,0 +1,17 @@
+[Unit]
+Description=telegram-disappearing-media-saver
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+WorkingDirectory=%h/apps/telegram-disappearing-media-saver
+ExecStart=%h/apps/telegram-disappearing-media-saver/.venv/bin/python -u %h/apps/telegram-disappearing-media-saver/saver.py --state-dir %h/.local/share/telegram-disappearing-media-saver --output %h/TelegramMedia
+Restart=always
+RestartSec=15
+KillSignal=SIGINT
+TimeoutStopSec=30
+UMask=0077
+NoNewPrivileges=true
+
+[Install]
+WantedBy=default.target
